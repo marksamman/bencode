@@ -3,6 +3,12 @@ bencode
 
 Bencode implementation in Go
 
+## Download the package
+
+```bash
+$ go get github.com/marksamman/bencode
+```
+
 ## Usage
 
 ### Encode
@@ -25,7 +31,7 @@ func main() {
 ```
 
 ### Decode
-bencode.Decode takes an io.Reader as argument and returns (dict, err). Example:
+bencode.Decode takes an io.Reader as argument and returns (map[string]interface{}, error). Example:
 ```go
 package main
 
