@@ -30,6 +30,7 @@ import (
 
 func TestEncodeSinglefileTorrentBencode(t *testing.T) {
 	dict := make(map[string]interface{})
+	dict["__keys"] = []string{"announce", "comment", "creation date", "httpseeds", "info"}
 	dict["announce"] = "http://bttracker.debian.org:6969/announce"
 	dict["comment"] = "\"Debian CD from cdimage.debian.org\""
 	dict["creation date"] = 1391870037
@@ -39,6 +40,7 @@ func TestEncodeSinglefileTorrentBencode(t *testing.T) {
 	}
 
 	infoDict := make(map[string]interface{})
+	infoDict["__keys"] = []string{"length", "name", "piece length", "pieces"}
 	infoDict["length"] = 232783872
 	infoDict["name"] = "debian-7.4.0-amd64-netinst.iso"
 	infoDict["piece length"] = 262144

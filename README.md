@@ -3,7 +3,7 @@ bencode
 
 Bencode implementation in Go
 
-## Download the package
+## Download
 
 ```bash
 $ go get github.com/marksamman/bencode
@@ -24,10 +24,15 @@ import (
 
 func main() {
 	dict := make(map[string]interface{})
-	dict["string_key"] = "hello world"
-	dict["int_key"] = 123456
+	dict["string key"] = "hello world"
+	dict["int key"] = 123456
 	fmt.Printf("bencode encoded dict: %s\n", bencode.Encode(dict))
 }
+```
+
+If a specific order is desired for dictionary keys when generating a bencode string, specify the keys in desired order in the dictionary key "\_\_keys". For dictionaries generated from bencode.Decode, "\_\_keys" is already set to the order the keys were read from the file. Example:
+```go
+dict["__keys"] = []string{"int key", "string key"}
 ```
 
 ### Decode

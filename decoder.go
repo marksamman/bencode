@@ -102,6 +102,7 @@ func (decoder *decoder) readString() (string, error) {
 
 func (decoder *decoder) readDictionary() (map[string]interface{}, error) {
 	dict := make(map[string]interface{})
+	keys := []string{}
 	for {
 		key, err := decoder.readString()
 		if err != nil {
@@ -139,7 +140,9 @@ func (decoder *decoder) readDictionary() (map[string]interface{}, error) {
 			return nil, err
 		}
 
+		keys = append(keys, key)
 		if nextByte == 'e' {
+			dict["__keys"] = keys
 			return dict, nil
 		} else if err := decoder.UnreadByte(); err != nil {
 			return nil, err

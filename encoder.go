@@ -88,12 +88,16 @@ func (encoder *encoder) writeList(list []interface{}) {
 
 func (encoder *encoder) writeDictionary(dict map[string]interface{}) {
 	encoder.WriteByte('d')
-	for k, v := range dict {
-		// Key
-		encoder.writeString(k)
-
-		// Value
-		encoder.writeInterfaceType(v)
+	if keys, ok := dict["__keys"]; ok {
+		for _, v := range keys.([]string) {
+			encoder.writeString(v)              // Key
+			encoder.writeInterfaceType(dict[v]) // Value
+		}
+	} else {
+		for k, v := range dict {
+			encoder.writeString(k)        // Key
+			encoder.writeInterfaceType(v) // Value
+		}
 	}
 	encoder.WriteByte('e')
 }
