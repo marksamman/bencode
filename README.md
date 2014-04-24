@@ -12,7 +12,7 @@ $ go get github.com/marksamman/bencode
 ## Usage
 
 ### Encode
-bencode.Encode takes a map[string]interface{} as argument and returns a string. Example:
+bencode.Encode takes a map[string]interface{} as argument and returns a byte array. Example:
 ```go
 package main
 
