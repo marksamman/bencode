@@ -3,7 +3,7 @@ bencode
 
 Bencode implementation in Go
 
-## Download
+## Install
 
 ```bash
 $ go get github.com/marksamman/bencode
