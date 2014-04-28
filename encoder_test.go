@@ -77,8 +77,8 @@ func TestEncodeListOfInts(t *testing.T) {
 	expected += fmt.Sprintf("i%de", math.MinInt16)
 	expected += fmt.Sprintf("i%de", math.MaxUint16)
 	expected += fmt.Sprintf("i%de", math.MinInt32)
-	expected += fmt.Sprintf("i%de", math.MaxUint32)
-	expected += fmt.Sprintf("i%de", math.MinInt64)
+	expected += fmt.Sprintf("i%de", uint32(math.MaxUint32))
+	expected += fmt.Sprintf("i%de", int64(math.MinInt64))
 	expected += fmt.Sprintf("i%de", uint64(math.MaxUint64))
 	expected += "i-1e"
 	expected += "i0e"
