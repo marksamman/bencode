@@ -80,6 +80,7 @@ func (decoder *decoder) readList() ([]interface{}, error) {
 		}
 		list = append(list, item)
 	}
+	return list, nil
 }
 
 func (decoder *decoder) readString() (string, error) {
@@ -143,11 +144,12 @@ func (decoder *decoder) readDictionary() (map[string]interface{}, error) {
 		keys = append(keys, key)
 		if nextByte == 'e' {
 			dict["__keys"] = keys
-			return dict, nil
+			break
 		} else if err := decoder.UnreadByte(); err != nil {
 			return nil, err
 		}
 	}
+	return dict, nil
 }
 
 // Decode takes an io.Reader and parses it as bencode,
