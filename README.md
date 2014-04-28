@@ -1,4 +1,4 @@
-bencode
+bencode [![Build Status](https://travis-ci.org/marksamman/bencode.svg?branch=master)](https://travis-ci.org/marksamman/bencode)
 =======
 
 Bencode implementation in Go
