@@ -60,7 +60,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("string: %s\n", dict["string_key"].(string))
-	fmt.Printf("int: %d\n", dict["int_key"].(int64))
+	fmt.Printf("string: %s\n", dict["string key"].(string))
+	fmt.Printf("int: %d\n", dict["int key"].(int64))
 }
 ```

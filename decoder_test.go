@@ -93,9 +93,20 @@ func TestDecodeListOfInts(t *testing.T) {
 	}
 }
 
-func TestDecodeTooLargeInt(t *testing.T) {
-	_, err := Decode(bytes.NewBufferString(fmt.Sprintf("d3:keyi%dee", uint64(math.MaxInt64)+1)))
-	if err == nil {
-		t.Error("expected error")
+func TestDecodeUint64(t *testing.T) {
+	values := []interface{}{
+		uint64(math.MaxInt64) + 1,
+		uint64(math.MaxUint64),
+	}
+
+	dict, err := Decode(bytes.NewBufferString(fmt.Sprintf("d3:keyli%dei%deee", values...)))
+	if err != nil {
+		t.Error("failed to decode uint64")
+	}
+
+	for k, v := range dict["key"].([]interface{}) {
+		if v != values[k] {
+			t.Error("value mismatch")
+		}
 	}
 }

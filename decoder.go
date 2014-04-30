@@ -33,20 +33,23 @@ type decoder struct {
 	bufio.Reader
 }
 
-func (decoder *decoder) readIntUntil(until byte) (int64, error) {
+func (decoder *decoder) readIntUntil(until byte) (interface{}, error) {
 	res, err := decoder.ReadSlice(until)
 	if err != nil {
 		return -1, err
 	}
 
-	value, err := strconv.ParseInt(string(res[:len(res)-1]), 10, 64)
-	if err != nil {
-		return -1, err
+	str := string(res[:len(res)-1])
+
+	if value, err := strconv.ParseInt(str, 10, 64); err == nil {
+		return value, nil
+	} else if value, err := strconv.ParseUint(str, 10, 64); err == nil {
+		return value, nil
 	}
-	return value, nil
+	return nil, err
 }
 
-func (decoder *decoder) readInt() (int64, error) {
+func (decoder *decoder) readInt() (interface{}, error) {
 	return decoder.readIntUntil('e')
 }
 
@@ -89,9 +92,10 @@ func (decoder *decoder) readString() (string, error) {
 		return "", err
 	}
 
-	stringBuffer := make([]byte, len)
+	stringLength := len.(int64)
+	stringBuffer := make([]byte, stringLength)
 	var pos int64
-	for pos < len {
+	for pos < stringLength {
 		var n int
 		if n, err = decoder.Read(stringBuffer[pos:]); err != nil {
 			return "", err
@@ -143,19 +147,18 @@ func (decoder *decoder) readDictionary() (map[string]interface{}, error) {
 
 		keys = append(keys, key)
 		if nextByte == 'e' {
-			dict["__keys"] = keys
 			break
 		} else if err := decoder.UnreadByte(); err != nil {
 			return nil, err
 		}
 	}
+
+	dict["__keys"] = keys
 	return dict, nil
 }
 
 // Decode takes an io.Reader and parses it as bencode,
 // on failure, err will be a non-nil value
-//
-// NOTE: Does not support decoding ints larger than int64
 func Decode(reader io.Reader) (map[string]interface{}, error) {
 	decoder := decoder{*bufio.NewReader(reader)}
 	if firstByte, err := decoder.ReadByte(); err != nil {
