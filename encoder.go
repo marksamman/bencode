@@ -25,6 +25,7 @@ package bencode
 import (
 	"bytes"
 	"strconv"
+	"sort"
 )
 
 type encoder struct {
@@ -87,17 +88,19 @@ func (encoder *encoder) writeList(list []interface{}) {
 }
 
 func (encoder *encoder) writeDictionary(dict map[string]interface{}) {
+	// Sort in lexicographical order
+	list := make(sort.StringSlice, len(dict))
+	i := 0
+	for key, _ := range dict {
+		list[i] = key
+		i++
+	}
+	list.Sort()
+
 	encoder.WriteByte('d')
-	if keys, ok := dict["__keys"]; ok {
-		for _, v := range keys.([]string) {
-			encoder.writeString(v)              // Key
-			encoder.writeInterfaceType(dict[v]) // Value
-		}
-	} else {
-		for k, v := range dict {
-			encoder.writeString(k)        // Key
-			encoder.writeInterfaceType(v) // Value
-		}
+	for _, key := range list {
+		encoder.writeString(key)              // Key
+		encoder.writeInterfaceType(dict[key]) // Value
 	}
 	encoder.WriteByte('e')
 }

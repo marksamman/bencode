@@ -30,11 +30,6 @@ func main() {
 }
 ```
 
-If a specific order is desired for dictionary keys when generating a bencode string, specify the keys in desired order in the dictionary key "\_\_keys". For dictionaries generated from bencode.Decode, "\_\_keys" is already set to the order the keys were read from the file. Example:
-```go
-dict["__keys"] = []string{"int key", "string key"}
-```
-
 ### Decode
 bencode.Decode takes an io.Reader as argument and returns (map[string]interface{}, error). Example:
 ```go
