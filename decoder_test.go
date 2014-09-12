@@ -110,3 +110,15 @@ func TestDecodeUint64(t *testing.T) {
 		}
 	}
 }
+
+func TestDecodeNegativeString(t *testing.T) {
+	if _, err := Decode(bytes.NewBufferString("d1:k-1:")); err.Error() != "string length can not be a negative number" {
+		t.Error(err)
+	}
+}
+
+func TestDecodeUint64StringLength(t *testing.T) {
+	if _, err := Decode(bytes.NewBufferString("d1:k9223372036854775808:")); err.Error() != "string length may not exceed the size of int64" {
+		t.Error()
+	}
+}

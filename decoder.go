@@ -36,7 +36,7 @@ type decoder struct {
 func (decoder *decoder) readIntUntil(until byte) (interface{}, error) {
 	res, err := decoder.ReadSlice(until)
 	if err != nil {
-		return -1, err
+		return nil, err
 	}
 
 	str := string(res[:len(res)-1])
@@ -92,7 +92,16 @@ func (decoder *decoder) readString() (string, error) {
 		return "", err
 	}
 
-	stringLength := len.(int64)
+	var stringLength int64
+	var ok bool
+	if stringLength, ok = len.(int64); !ok {
+		return "", errors.New("string length may not exceed the size of int64")
+	}
+
+	if stringLength < 0 {
+		return "", errors.New("string length can not be a negative number")
+	}
+
 	stringBuffer := make([]byte, stringLength)
 	var pos int64
 	for pos < stringLength {
