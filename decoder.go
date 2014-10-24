@@ -61,6 +61,10 @@ func (decoder *decoder) readList() ([]interface{}, error) {
 			return nil, err
 		}
 
+		if ch == 'e' {
+			break
+		}
+
 		var item interface{}
 		switch ch {
 		case 'i':
@@ -69,8 +73,6 @@ func (decoder *decoder) readList() ([]interface{}, error) {
 			item, err = decoder.readList()
 		case 'd':
 			item, err = decoder.readDictionary()
-		case 'e':
-			return list, nil
 		default:
 			if err := decoder.UnreadByte(); err != nil {
 				return nil, err
