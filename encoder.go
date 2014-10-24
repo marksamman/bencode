@@ -24,8 +24,8 @@ package bencode
 
 import (
 	"bytes"
-	"strconv"
 	"sort"
+	"strconv"
 )
 
 type encoder struct {
@@ -91,7 +91,7 @@ func (encoder *encoder) writeDictionary(dict map[string]interface{}) {
 	// Sort in lexicographical order
 	list := make(sort.StringSlice, len(dict))
 	i := 0
-	for key, _ := range dict {
+	for key := range dict {
 		list[i] = key
 		i++
 	}
