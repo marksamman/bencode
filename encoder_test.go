@@ -23,6 +23,8 @@
 package bencode
 
 import (
+	"bufio"
+	"bytes"
 	"fmt"
 	"math"
 	"testing"
@@ -84,5 +86,39 @@ func TestEncodeListOfInts(t *testing.T) {
 	expected += "ee"
 	if res != expected {
 		t.Error(fmt.Sprintf("expected %s\ngot %s", expected, res))
+	}
+}
+
+func TestEncodeKeySortingOrder(t *testing.T) {
+	dict := map[string]interface{}{
+		"Abe": 1,
+		"abe": 1,
+		"abé": 1,
+		"Ábe": 1,
+		"ábe": 1,
+		"Äbe": 1,
+		"äbe": 1,
+		"Oeb": 1,
+		"oeb": 1,
+		"Ôeb": 1,
+		"ôeb": 1,
+	}
+
+	decoder := decoder{*bufio.NewReader(bytes.NewReader(Encode(dict)))}
+	decoder.ReadByte() // skip 'd'
+
+	expectedOrder := []string{"Abe", "Oeb", "abe", "abé", "oeb", "Ábe", "Äbe", "Ôeb", "ábe", "äbe", "ôeb"}
+	for index, expected := range expectedOrder {
+		if str, err := decoder.readString(); err != nil {
+			t.Error(err)
+		} else if str != expected {
+			t.Errorf("wrong order, expected: %s, got: %s at index %d", expected, str, index)
+		}
+
+		if b, err := decoder.ReadByte(); err != nil {
+			t.Error(err)
+		} else if _, err := decoder.readInterfaceType(b); err != nil {
+			t.Error(err)
+		}
 	}
 }
