@@ -88,7 +88,7 @@ func (encoder *encoder) writeList(list []interface{}) {
 }
 
 func (encoder *encoder) writeDictionary(dict map[string]interface{}) {
-	// Sort in lexicographical order
+	// Sort keys
 	list := make(sort.StringSlice, len(dict))
 	i := 0
 	for key := range dict {
