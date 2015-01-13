@@ -53,20 +53,21 @@ func (decoder *decoder) readInt() (interface{}, error) {
 	return decoder.readIntUntil('e')
 }
 
-func (decoder *decoder) readInterfaceType(identifier byte) (interface{}, error) {
+func (decoder *decoder) readInterfaceType(identifier byte) (item interface{}, err error) {
 	switch identifier {
 	case 'i':
-		return decoder.readInt()
+		item, err = decoder.readInt()
 	case 'l':
-		return decoder.readList()
+		item, err = decoder.readList()
 	case 'd':
-		return decoder.readDictionary()
+		item, err = decoder.readDictionary()
 	default:
 		if err := decoder.UnreadByte(); err != nil {
 			return nil, err
 		}
-		return decoder.readString()
+		item, err = decoder.readString()
 	}
+	return item, err
 }
 
 func (decoder *decoder) readList() ([]interface{}, error) {
