@@ -105,8 +105,8 @@ func (encoder *encoder) writeDictionary(dict map[string]interface{}) {
 	encoder.WriteByte('e')
 }
 
-// Encode takes a bencode supported data type and returns
-// a bencode byte array representation of the dictionary
+// Encode takes a bencode supported data type and
+// returns a bencode byte array representation
 func Encode(v interface{}) []byte {
 	encoder := encoder{}
 	encoder.writeInterfaceType(v)
