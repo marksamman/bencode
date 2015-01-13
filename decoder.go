@@ -53,6 +53,22 @@ func (decoder *decoder) readInt() (interface{}, error) {
 	return decoder.readIntUntil('e')
 }
 
+func (decoder *decoder) readInterfaceType(identifier byte) (interface{}, error) {
+	switch identifier {
+	case 'i':
+		return decoder.readInt()
+	case 'l':
+		return decoder.readList()
+	case 'd':
+		return decoder.readDictionary()
+	default:
+		if err := decoder.UnreadByte(); err != nil {
+			return nil, err
+		}
+		return decoder.readString()
+	}
+}
+
 func (decoder *decoder) readList() ([]interface{}, error) {
 	var list []interface{}
 	for {
@@ -65,21 +81,7 @@ func (decoder *decoder) readList() ([]interface{}, error) {
 			break
 		}
 
-		var item interface{}
-		switch ch {
-		case 'i':
-			item, err = decoder.readInt()
-		case 'l':
-			item, err = decoder.readList()
-		case 'd':
-			item, err = decoder.readDictionary()
-		default:
-			if err := decoder.UnreadByte(); err != nil {
-				return nil, err
-			}
-			item, err = decoder.readString()
-		}
-
+		item, err := decoder.readInterfaceType(ch)
 		if err != nil {
 			return nil, err
 		}
@@ -129,21 +131,7 @@ func (decoder *decoder) readDictionary() (map[string]interface{}, error) {
 			return nil, err
 		}
 
-		var item interface{}
-		switch ch {
-		case 'i':
-			item, err = decoder.readInt()
-		case 'l':
-			item, err = decoder.readList()
-		case 'd':
-			item, err = decoder.readDictionary()
-		default:
-			if err := decoder.UnreadByte(); err != nil {
-				return nil, err
-			}
-			item, err = decoder.readString()
-		}
-
+		item, err := decoder.readInterfaceType(ch)
 		if err != nil {
 			return nil, err
 		}
