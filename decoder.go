@@ -107,16 +107,9 @@ func (decoder *decoder) readString() (string, error) {
 		return "", errors.New("string length can not be a negative number")
 	}
 
-	stringBuffer := make([]byte, stringLength)
-	var pos int64
-	for pos < stringLength {
-		var n int
-		if n, err = decoder.Read(stringBuffer[pos:]); err != nil {
-			return "", err
-		}
-		pos += int64(n)
-	}
-	return string(stringBuffer), nil
+	buffer := make([]byte, stringLength)
+	_, err = io.ReadFull(decoder, buffer)
+	return string(buffer), err
 }
 
 func (decoder *decoder) readDictionary() (map[string]interface{}, error) {
