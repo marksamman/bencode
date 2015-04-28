@@ -24,6 +24,7 @@ package bencode
 
 import (
 	"bytes"
+	"reflect"
 	"sort"
 	"strconv"
 )
@@ -51,31 +52,17 @@ func (encoder *encoder) writeUint(v uint64) {
 }
 
 func (encoder *encoder) writeInterfaceType(v interface{}) {
-	switch v.(type) {
+	switch v := v.(type) {
 	case string:
-		encoder.writeString(v.(string))
+		encoder.writeString(v)
 	case []interface{}:
-		encoder.writeList(v.([]interface{}))
+		encoder.writeList(v)
 	case map[string]interface{}:
-		encoder.writeDictionary(v.(map[string]interface{}))
-	case int:
-		encoder.writeInt(int64(v.(int)))
-	case int8:
-		encoder.writeInt(int64(v.(int8)))
-	case int16:
-		encoder.writeInt(int64(v.(int16)))
-	case int32:
-		encoder.writeInt(int64(v.(int32)))
-	case int64:
-		encoder.writeInt(v.(int64))
-	case uint8:
-		encoder.writeUint(uint64(v.(uint8)))
-	case uint16:
-		encoder.writeUint(uint64(v.(uint16)))
-	case uint32:
-		encoder.writeUint(uint64(v.(uint32)))
-	case uint64:
-		encoder.writeUint(v.(uint64))
+		encoder.writeDictionary(v)
+	case int, int8, int16, int32, int64:
+		encoder.writeInt(reflect.ValueOf(v).Int())
+	case uint, uint8, uint16, uint32, uint64:
+		encoder.writeUint(reflect.ValueOf(v).Uint())
 	}
 }
 
